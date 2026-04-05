@@ -55,7 +55,7 @@ I am currently working on implementing **Retrieval-Augmented Generation (RAG)**.
 This project demonstrates the practical application of AI in solving real-world logistics and communication challenges. By combining LLM capabilities with essential travel tools, it creates a high-utility platform that empowers users to explore the world with confidence.
 
 ---
-Developed by [Sidharth Singh](sidharthsingh0710@gmail.com)
+Developed by [Sidharth Singh](https://github.com/Cdharth-07)
 
 
 
