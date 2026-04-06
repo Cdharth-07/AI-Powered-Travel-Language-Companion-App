@@ -15,27 +15,38 @@ The goal of this project is to provide travelers with a centralized, intelligent
 
 ## 📸 Application Overview
 
+### The Geospatial Element & UI
+![App Layout](images/Chatbot_pg_1.png)
+*The main interface featuring live location tracking (Folium) and open-source weather synchronization.*
+
 ### Interactive AI Chatbot & Translation
-The core of the app is an LLM-powered assistant that handles translations and provides cultural context for your destination, ensuring you never feel "lost in translation."
+![LLM Response](images/Chatbot_pg_3.png)
+*RAG-powered AI providing structured travel recommendations, historical context, and translations.*
+
+### Vision & Audio Capabilities
+![Vision Integration](images/Chatbot_pg_5.png)
+*Real-time camera integration allowing the AI to analyze visual context alongside audio transcriptions.*
 
 ### Travel Utilities
-The app features dedicated modules for **Live Weather** (fetching real-time data) and a **Currency Converter** to manage travel budgets effectively on the go.
+![Currency Converter](images/Chatbot_pg_6.png)
+*A dedicated module for real-time currency conversion using live exchange APIs to manage budgets effectively.*
 
 ## 🛠️ Tools & Technologies Used
 
 * **Interface & Deployment:** [Streamlit](https://streamlit.io/)
-* **Artificial Intelligence:** OpenAI GPT / LLM Integration
+* **Artificial Intelligence:** OpenAI GPT-4o-mini / Whisper / TTS Integration
 * **Programming Language:** Python (using JSON, Dictionaries, and Error Handling)
 * **APIs:** OpenWeatherMap API, Currency Exchange APIs
+* **Database:** ChromaDB (Vector Database)
 * **Version Control:** Git & GitHub
 
 ## 📂 Project Structure
 
-* **`Chat_bot.py`**: Logic for the AI conversation and translation engine.
+* **`Chat_bot.py`**: Logic for the AI conversation, mult-modal inputs, and translation engine.
 * **`streamlit_app.py`**: The main interface and navigation hub.
 * **`location_weather.py`**: Integration with weather services for live updates.
 * **`Currency.py`**: Real-time currency conversion logic.
-* **`pdfs/`**: A curated folder of destination-specific guides (e.g., Paris, Tokyo).
+* **`pdfs/`**: A curated folder of destination-specific guides (e.g., Paris, Tokyo) for RAG embedding.
 
 ## ✨ Key Features & Functionality
 
@@ -46,9 +57,9 @@ The app features dedicated modules for **Live Weather** (fetching real-time data
 * **🔢 Real-time Data Fetching:** Implements API calls to ensure weather and currency rates are accurate to the minute.
 * **🎨 User-Centric Design:** A clean, sidebar-driven navigation layout built for ease of use on both desktop and mobile views.
 
-## 🚀 Future Roadmap: RAG Integration
+## 🚀 Future Roadmap: Advanced RAG Integration
 
-I am currently working on implementing **Retrieval-Augmented Generation (RAG)**. This upgrade will allow the AI to move beyond general knowledge and "read" the specific PDF guides stored in the repository to provide hyper-accurate, document-verified travel advice.
+I am currently working on expanding the **Retrieval-Augmented Generation (RAG)** pipeline. This upgrade will allow the AI to move beyond general knowledge and "read" an even wider array of specific PDF guides stored in the repository to provide hyper-accurate, document-verified travel advice.
 
 ## 🏁 Conclusion
 
@@ -56,7 +67,3 @@ This project demonstrates the practical application of AI in solving real-world 
 
 ---
 Developed by [Sidharth Singh](https://github.com/Cdharth-07)
-
-
-
-
