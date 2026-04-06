@@ -8,61 +8,58 @@ from datetime import datetime
 geolocator = Nominatim(user_agent="location_finder")
 
 def get_location_and_weather(latitude, longitude, client):
-    """
-    Function to find city, state, and country based on user's geolocation and fetch weather data.
-    
-    Parameters:
-        openai_key (str): OpenAI API key.
-        weather_api_key (str): OpenWeatherMap API key.
-    
-    Returns:
-        dict: Weather data and location information.
-    """
     geolocator = Nominatim(user_agent="location_finder")
-
-
-    location = geolocator.reverse((latitude, longitude), language="en")
-
-    address = location.raw.get('address', {})
-    city = address.get('city', '')
-    state = address.get('state', '')
-    country = address.get('country', '')
-
-
-    location = f"{city}, {state}, {country}"
-
-    coor_message = f"""
-    This is the location {location}, format it in a way so that it is accepted by 
-    openweathermap API example if the location is "City of Syracuse,New York, United States"
-    format it as "Syracuse, US", if just "New York,New York,United States" format it as
-    "New York City, US" and only return the formatted location nothing else.
-    """
-
-    stream = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "system", "content": coor_message},
-                    {"role": "user", "content": location}]
-    )
-
-    location = stream.choices[0].message.content
-
-
-    data, local_time = get_weather(location)
-        
     
-    return data, local_time, location
+    try:
+        location_obj = geolocator.reverse((latitude, longitude), language="en")
+        address = location_obj.raw.get('address', {})
+        city = address.get('city', address.get('town', address.get('village', '')))
+        state = address.get('state', '')
+        country = address.get('country', '')
+        
+        raw_location = f"{city}, {state}, {country}"
+
+        coor_message = """
+        Format the location for OpenWeatherMap API. 
+        Example: "City of Syracuse, New York, United States" -> "Syracuse, US".
+        Return ONLY the formatted string.
+        """
+
+        stream = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "system", "content": coor_message},
+                      {"role": "user", "content": raw_location}]
+        )
+
+        formatted_location = stream.choices[0].message.content
+
+        data, local_time = get_weather(formatted_location)
+        
+        return data, local_time, formatted_location
+    except Exception as e:
+        st.error(f"Location Error: {e}")
+        return None, None, "Unknown Location"
 
 def get_weather(formatted_location):
-    
-    urlbase = "https://api.openweathermap.org/data/2.5/"
-    urlweather = f"weather?q={formatted_location}&appid={st.secrets['weather_key']}"
-    url = urlbase + urlweather
+    urlbase = "https://api.openweathermap.org/data/2.5/weather"
+    params = {
+        "q": formatted_location,
+        "appid": st.secrets['weather_key'],
+        "units": "metric"
+    }
 
-    response = requests.get(url)
+    response = requests.get(urlbase, params=params)
     data = response.json()
 
-    utc_timestamp = data['dt']
-    offset_seconds = data['timezone']
+    # Check if the API returned a success code (200)
+    if response.status_code != 200:
+        error_msg = data.get('message', 'Unknown API Error')
+        st.warning(f"Weather API Warning: {error_msg}. Check if your OpenWeather key is active (30-60 min delay).")
+        return data, datetime.now() 
+
+    # Only access 'dt' if the request was successful
+    utc_timestamp = data.get('dt', int(datetime.now().timestamp()))
+    offset_seconds = data.get('timezone', 0)
     local_timestamp = utc_timestamp + offset_seconds
     local_time = datetime.fromtimestamp(local_timestamp)
 
